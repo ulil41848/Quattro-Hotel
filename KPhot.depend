@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1794900229 source:d:\hp\documents\kphot\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<ctime>
+	<cstdio>
+	<cctype>
+	<conio.h>
+
