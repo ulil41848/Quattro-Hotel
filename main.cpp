@@ -176,7 +176,7 @@ int main() {
          "Jl. Pemuda, No 29, Kebumen",
          "WiFi, Lift, Parkir, Area Publik",
          {{"Standard Room", 400000,  FAS_STD},
-          {"Deluxe Room",   600000,  FAS_DLX},
+          {"Deluxe Room",   600000, FAS_DLX},
           {"Suite Room",    1000000, FAS_SUI}}},
 
         {"Hotel Trio Azana Style",
@@ -275,6 +275,7 @@ int main() {
         if (pilihanHotel >= 1 && pilihanHotel <= 4) break;
         cout << "Silakan pilih hotel dari pilihan yang tersedia!\n";
     }
+
     Hotel hotelPilihan = daftarHotel[pilihanHotel - 1];
     cout << "Anda memilih " << hotelPilihan.nama << "\n";
 
@@ -294,6 +295,7 @@ int main() {
         if (pilihIn >= 1 && pilihIn <= 7) break;
         cout << "Silakan pilih tanggal check-in dengan angka yang disediakan!\n";
     }
+
     tm tglIn = tambahHari(hariIni, pilihIn - 1);
     string tanggalCheckIn = formatTanggal(tglIn);
 
@@ -311,6 +313,7 @@ int main() {
         if (jumlahMalam >= 1 && jumlahMalam <= 7) break;
         cout << "Silakan pilih tanggal check-out dengan angka yang disediakan!\n";
     }
+
     tm tglOut = tambahHari(tglIn, jumlahMalam);
     string tanggalCheckOut = formatTanggal(tglOut);
 
@@ -326,6 +329,7 @@ int main() {
 
         cout << "\n=== DAFTAR KAMAR - " << hotelPilihan.nama << " ===\n";
         cout << "(Sisa kuota kamar yang bisa dipesan: " << sisaKamar << ")\n";
+
         for (int i = 0; i < 3; i++) {
             cout << i + 1 << ". " << hotelPilihan.kamar[i].nama;
             if (sudahDipilih[i]) cout << "  (sudah dipilih)";
@@ -389,6 +393,7 @@ int main() {
     cout << "\n--- RINCIAN HARGA ---\n";
     cout << "Hotel        : " << hotelPilihan.nama << "\n";
     cout << "Jumlah malam : " << jumlahMalam << "\n";
+
     for (int i = 0; i < jumlahItem; i++) {
         long long subtotal = pesanan[i].harga * pesanan[i].jumlah * jumlahMalam;
         totalHarga += subtotal;
@@ -396,6 +401,7 @@ int main() {
              << " x " << pesanan[i].jumlah << " kamar x " << jumlahMalam << " malam = "
              << formatRupiah(subtotal) << "\n";
     }
+
     cout << "Total kamar  : " << totalKamar << "\n";
     cout << "Total harga  : " << formatRupiah(totalHarga) << "\n";
 
@@ -420,6 +426,7 @@ int main() {
         if (metode == 1) {
             cout << "\nPilih Bank:\n";
             for (int i = 0; i < 3; i++) cout << i + 1 << ". " << daftarBank[i] << "\n";
+
             int pilihBank;
             while (true) {
                 cout << "Pilih bank (1-3): ";
@@ -427,10 +434,13 @@ int main() {
                 if (pilihBank >= 1 && pilihBank <= 3) break;
                 cout << "Silakan memilih metode pembayaran yang disediakan!\n";
             }
+
             metodeBayar = "Transfer Bank - " + daftarBank[pilihBank - 1];
+
         } else {
             cout << "\nPilih E-Wallet:\n";
             for (int i = 0; i < 3; i++) cout << i + 1 << ". " << daftarEwallet[i] << "\n";
+
             int pilihEwallet;
             while (true) {
                 cout << "Pilih e-wallet (1-3): ";
@@ -438,6 +448,7 @@ int main() {
                 if (pilihEwallet >= 1 && pilihEwallet <= 3) break;
                 cout << "Silakan memilih metode pembayaran yang disediakan!\n";
             }
+
             metodeBayar = "E-Wallet - " + daftarEwallet[pilihEwallet - 1];
         }
 
@@ -467,9 +478,11 @@ int main() {
     cout << "Check-out       : " << tanggalCheckOut << "\n";
     cout << "Jumlah malam    : " << jumlahMalam << "\n";
     cout << "Kamar dipesan   :\n";
+
     for (int i = 0; i < jumlahItem; i++) {
         cout << "   - " << pesanan[i].nama << " x " << pesanan[i].jumlah << "\n";
     }
+
     cout << "Metode bayar    : " << metodeBayar << "\n";
     cout << "Total harga     : " << formatRupiah(totalHarga) << "\n";
     cout << "Status          : " << statusPembayaran << "\n";
@@ -478,21 +491,40 @@ int main() {
 
     // Simpan data pemesanan ke file
     ofstream file("booking.txt", ios::app);
+
     if (file.is_open()) {
-        file << "Nama: " << akun.nama << " | Hotel: " << hotelPilihan.nama
-             << " | " << tanggalCheckIn << " s/d " << tanggalCheckOut
-             << " | Malam: " << jumlahMalam << " | Kamar: ";
+        file << "============================================\n";
+        file << "              BUKTI BOOKING HOTEL\n";
+        file << "============================================\n";
+        file << "Nama Pelanggan : " << akun.nama << "\n";
+        file << "Nama Hotel     : " << hotelPilihan.nama << "\n";
+        file << "Lokasi         : " << hotelPilihan.alamat << "\n";
+        file << "Check-in       : " << tanggalCheckIn << "\n";
+        file << "Check-out      : " << tanggalCheckOut << "\n";
+        file << "Jumlah Malam   : " << jumlahMalam << " malam\n";
+        file << "\n";
+
+        file << "Kamar Dipesan:\n";
+
         for (int i = 0; i < jumlahItem; i++) {
-            file << pesanan[i].nama << " x" << pesanan[i].jumlah;
-            if (i < jumlahItem - 1) file << ", ";
+            file << "- " << pesanan[i].nama
+                 << " x " << pesanan[i].jumlah
+                 << "\n";
         }
-        file << " | Bayar: " << metodeBayar
-             << " | Total: " << formatRupiah(totalHarga)
-             << " | " << statusPembayaran << "\n";
+
+        file << "\n";
+        file << "Metode Bayar   : " << metodeBayar << "\n";
+        file << "Total Harga    : " << formatRupiah(totalHarga) << "\n";
+        file << "Status         : " << statusPembayaran << "\n";
+        file << "============================================\n";
+        file << "       Booking berhasil dilakukan!\n";
+        file << "============================================\n\n";
+
         file.close();
-        cout << "Data pemesanan disimpan di 'booking.txt'\n";
+
+        cout << "Bukti booking berhasil disimpan di 'booking.txt'\n";
     } else {
-        cout << "Gagal menyimpan data pemesanan!\n";
+        cout << "Gagal menyimpan bukti booking!\n";
     }
 
     cout << "\nTerima kasih telah melakukan pemesanan di " << namaAplikasi << "\n";
